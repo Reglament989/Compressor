@@ -48,7 +48,7 @@ def Compress(directory):
 			with open(absolute_path_file, 'rb') as f:
 				fileobj = f.read()
 			tarinfo = tarfile.TarInfo(file)
-			print(f"Append {absolute_path_file} to {archives[-1]}\n\tSize: {tarinfo.size}\n")
+			print(f"Append {absolute_path_file} to {archives[-1].name}\n")
 			archives[-1].addfile(tarinfo, fileobj)
 	except Exception as e:
 		raise e
