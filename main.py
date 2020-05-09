@@ -36,6 +36,7 @@ def Compress(directory):
 	for file in files:
 		if os.path.isdir(file):
 			continue
+	else:
 		absolute_path_file = os.path.join(directory, file)
 		file_size = os.path.getsize(absolute_path_file)
 		memory + file_size
@@ -46,7 +47,7 @@ def Compress(directory):
 			archives.append(tarfile.open(name_archive))
 		with open(absolute_path_file, 'rb') as f:
 			fileobj = f.read()
-		archives[-1].addfile(tarfile.Tarinfo(absolute_path_file), fileobj)
+		archives[-1].addfile(tarfile.TarInfo(file), fileobj)
 	# except Exception as e:
 	# 	raise e
 	# finally:
