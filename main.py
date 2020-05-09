@@ -82,7 +82,7 @@ def started_cli():
 {Color.Yellow}Hello this app arhivate all directory for parrent dir of script.{Color.Clear}
 {Color.Green}Run script with options -h for more help{Color.Clear}
 {Color.Blue}Author - Reglament989{Color.Clear}\n\n""")
-	# get_dirs()
+	get_dirs()
 
 def main():
 	args = parser.parse_args()
