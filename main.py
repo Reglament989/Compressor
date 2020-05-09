@@ -44,7 +44,9 @@ def Compress(directory):
 			name_archive = os.path.join(os.getcwd(), directory.split(splitter)[-1] + f'_{count}' + '.tar.xz') 
 			archives[-1].close()
 			archives.append(tarfile.open(name_archive))
-		archives[-1].add(absolute_path_file)
+		with open(absolute_path_file, 'rb') as f:
+			fileobj = f.read()
+		archives[-1].addfile(tarfile.Tarinfo(absolute_path_file), fileobj)
 	# except Exception as e:
 	# 	raise e
 	# finally:
