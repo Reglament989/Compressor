@@ -3,16 +3,17 @@ import os
 import sys
 # import argparser
 
+if PLATFORM == 'win32' or PLATFORM == 'win64':
+	splitter = '\\'
+else:
+	splitter = '/'
+
+
 ParentDir = os.getcwd()
 GitDirs = [x[0] for x in os.walk(os.path.join(ParentDir, '.git'))]
 MOD = 'TAR'
 PLATFORM = sys.platform
 OVER_SIZE = 1048576000 # 1 GB
-
-if PLATFORM == 'win32' or PLATFORM == 'win64':
-	splitter = '\\'
-else:
-	splitter = '/'
 
 
 def main():
@@ -48,7 +49,7 @@ def Compress(directory):
 			with open(absolute_path_file, 'rb') as f:
 				fileobj = f.read()
 			tarinfo = tarfile.TarInfo(file)
-			print(f"Append {absolute_path_file} to {archives[-1].name}\n")
+			print(f"Append {file} to {archives[-1].name}, Size - will be soon")
 			archives[-1].addfile(tarinfo, fileobj)
 	except Exception as e:
 		raise e
