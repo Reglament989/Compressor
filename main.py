@@ -26,7 +26,7 @@ def main():
 		print("Successffull compress, ", directory)
 
 def Compress(directory):
-	name_archive = os.path.join(os.getcwd(), directory.split(splitter)[-1]) 
+	name_archive = os.path.join(os.getcwd(), directory.split(splitter)[-1] + '.tar.xz') 
 	files = os.listdir(directory)
 	tar = tarfile.open(name_archive, 'x:xz')
 	archives = [tar]
@@ -41,7 +41,7 @@ def Compress(directory):
 		memory + file_size
 		if memory > OVER_SIZE:
 			count += 1
-			name_archive = os.path.join(os.getcwd(), directory.split(splitter)[-1] + f'_{count}') 
+			name_archive = os.path.join(os.getcwd(), directory.split(splitter)[-1] + f'_{count}' + '.tar.xz') 
 			archives[-1].close()
 			archives.append(tarfile.open(name_archive))
 		archives[-1].add(absolute_path_file)
@@ -57,3 +57,6 @@ def Compress(directory):
 
 # def main():
 # 	get_dirs()
+
+if __name__ == '__main__':
+  main()
