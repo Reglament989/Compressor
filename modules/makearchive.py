@@ -2,7 +2,9 @@ import tarfile
 import zipfile
 import os
 import sys
+import time
 from threading import Thread
+from ..utils import Color
 import logging
 
 if sys.platform == 'win32' or sys.platform == 'win64':
@@ -22,41 +24,49 @@ def join_thread(fn):
 class Compress:
     # @join_thread 
 
-    def make_zip(root_dir=os.getcwd(), name, compression=zipfile.ZIP_LZMA):
-        logging.debug(name)
-        if name != "archive.zip":
-            if name.endswith('.zip'):
-                pass
-            else:
-                name += ".zip"
+    def make_zip(name, compression, root_dir=os.getcwd()):
+        if os.path.exists(name):
+            logging.info(f"remove old archive {name}")
+            os.remove(name)
         with zipfile.ZipFile(file=name, mode='w', compression=compression) as zip:
             files = os.listdir()
             for file in files:
-                if (os.path.isdir(file) or file == '.gitignore'
-                 or file.endswith('.zip')
-                 or file.endswith('.tar.*')
-                 or file.split(splitter)[-1] == __file__):
+                if check_white_list(file):
                     continue
                 else:
-                    logging.debug(f"Archivate - {file}")
+                    logging.info(f"Archivate - {file}")
                     path = os.path.join(root_dir, file)
                     zip.write(path, arcname=file)
                     
-            # logging.debug(__file__)
-                    
-
+            # logging.debug(__file__)     
     # @join_thread
-    def make_tar(root_dir, mode='xz', arc_name="archive.tar."):
-        name = f"{arc_name}{mode}"
+    def make_tar(mode, name, root_dir=os.getcwd()):
         files = os.listdir(root_dir)
-        for file in files:
-            if os.path.isdir(file):
-                continue
-            else:
-                tarinfo = tarfile.TarInfo(file)
-                with open(os.path.join(root_dir, file), 'rb') as f:
-                    fileobj = f.read()
-                    with tarfile.open(name=name, mode=f"x:{mode}") as tar:
-                        tar.addfile(tarinfo, fileobj)
+        if os.path.exists(name):
+            logging.info(f"remove old archive {name}")
+            os.remove(name)
+        with tarfile.open(name=os.path.join(root_dir, name), mode=f"x:{mode}") as tar:
+            for file in files:
+                if check_white_list(file) or file == name:
+                        continue
+                else:
+                    logging.info(file)
+                    tarinfo = tarfile.TarInfo(file)
+                    with open(os.path.join(root_dir, file), 'rb') as f:
+                        fileobj = f.read()
+                    tar.addfile(tarinfo, fileobj)
+                
 
-    
+def check_white_list(file):
+    if (os.path.isdir(file) or file.startswith('.')
+        or file.endswith('.zip')
+        or file.startswith('__')
+        or file.endswith('.tar.gz')
+        or file.endswith('.tar.bz2')
+        or file.endswith('.tar.xz')
+        or file.endswith('.tar')
+        or file.split(splitter)[-1] == __file__):
+        return True
+    else:
+        return False  
+

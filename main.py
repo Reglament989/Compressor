@@ -3,12 +3,16 @@ import os
 import sys
 import logging
 import argparse
-from utils import Color
-from utils import splitter
-from utils import rand_pwd
-from modules.makearchive import Compress
+from .utils import Color
+from .utils import splitter
+from .utils import rand_pwd
+from .utils import StartGetConfig
+from .modules.makearchive import Compress
+from .utils import ScreenConfig
+from .modules.unarchivate import UnCompress
 
 parser = argparse.ArgumentParser(description='Easy arhivate your data with this script')
+parser.add_argument("-unzip", action='store', type=str, help="Unarchivate")
 parser.add_argument("-contribute", action='store_true', help="Contribute https://gihub.com/Reglament989/Compressor")
 parser.add_argument("-tree", action='store_true', help="Archivate all tree")
 parser.add_argument("-make", action='store_true', help="Archive current dir")
@@ -16,6 +20,7 @@ parser.add_argument("-name", action='store', help="Named for archive, only with 
 parser.add_argument("-debug", action='store_true', help="More info on shell")
 parser.add_argument("-config", action='store_true', help="Get more options and save as default")
 
+config = StartGetConfig()
 
 ParentDir = os.getcwd()
 try:
@@ -92,23 +97,34 @@ def main():
 		level = logging.DEBUG
 	else:
 		level = logging.INFO
-	if args.tree:
-		get_dirs()
 	logging.basicConfig(
-		format="%(filename)s[LINE:%(lineno)d] - %(message)s",
+		format=Color.Yellow + "\t[Arc] >> %(message)s" + Color.Clear,
 		level=level,
 	)
+	if args.tree:
+		get_dirs()
 	if args.config:
-		while True:
-			screen_config()
+		screen = ScreenConfig()
+		screen.render()
+	if args.unzip:
+		UnCompress(os.getcwd(),args.unzip)
 	if args.make:
-		if args.name:
-			name = args.name
-		else:
-			name = os.getcwd().split(splitter)[-1] + ".zip"
-	
-		Compress.make_zip(name=name)
-
+		if config['global']['default_arc'] == 'ZIP':
+			if not args.name:
+				name = os.getcwd().split(splitter)[-1] + ".zip"
+			else:
+				if args.name.endswith('.zip'):
+					pass
+				else:
+					name = args.name + ".zip"
+			Compress.make_zip(name=name, compression=config['ZIP']['compression'])
+		elif config['global']['default_arc'] == 'TAR':
+			if not args.name:
+				name = os.getcwd().split(splitter)[-1] + ".tar." + config['TAR']['compression']
+			else:
+				name = args.name
+			logging.info(name)
+			Compress.make_tar(name=name, mode=config['TAR']['compression'])
 		sys.exit(0)
 	
 
