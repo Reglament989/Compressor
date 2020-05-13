@@ -4,7 +4,7 @@ import os
 import sys
 import time
 from threading import Thread
-from ..utils import Color
+from .utils import Color
 import logging
 
 if sys.platform == 'win32' or sys.platform == 'win64':

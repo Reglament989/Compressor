@@ -7,11 +7,11 @@ from .utils import Color
 from .utils import splitter
 from .utils import rand_pwd
 from .utils import StartGetConfig
-from .modules.makearchive import Compress
+from .makearchive import Compress
 from .utils import ScreenConfig
-from .modules.unarchivate import UnCompress
+from .unarchivate import UnCompress
 
-parser = argparse.ArgumentParser(description='Easy arhivate your data with this script')
+parser = argparse.ArgumentParser(prog="python -m arc_tools",description='Easy arhivate your data with this script, I advise you to add an alias')
 parser.add_argument("-unzip", action='store', type=str, help="Unarchivate")
 parser.add_argument("-contribute", action='store_true', help="Contribute https://gihub.com/Reglament989/Compressor")
 parser.add_argument("-tree", action='store_true', help="Archivate all tree")

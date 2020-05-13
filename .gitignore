@@ -1,5 +1,8 @@
 test
 .vscode
 __pycache__
+arc_tools.*
+build/*
+dist/*
 *.tar.*
 *.zip
